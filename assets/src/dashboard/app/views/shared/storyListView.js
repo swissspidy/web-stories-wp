@@ -25,6 +25,9 @@ import { __ } from '@web-stories-wp/i18n';
 /**
  * Internal dependencies
  */
+/**
+ * Internal dependencies
+ */
 import {
   StoriesPropType,
   RenameStoryPropType,
@@ -92,11 +95,9 @@ const ArrowIcon = styled.div`
   display: inline-grid;
   color: ${({ theme }) => theme.colors.fg.primary};
   vertical-align: middle;
-
   svg {
     visibility: ${({ active }) => (active ? 'visible' : 'hidden')};
     transition: transform 0.15s;
-
     ${({ asc }) =>
       asc &&
       css`
@@ -114,7 +115,6 @@ const ArrowIconWithTitle = styled(ArrowIcon)`
   display: ${({ active }) => !active && 'none'};
   position: absolute;
   top: 16px;
-
   @media ${({ theme }) => theme.breakpoint.mobile} {
     margin-left: 4px;
   }
@@ -127,7 +127,6 @@ const HeavyTitle = styled(Text)`
 const SelectableTitle = styled(HeavyTitle).attrs({ tabIndex: 0 })`
   color: ${({ theme }) => theme.colors.fg.linkNormal};
   cursor: pointer;
-
   ${({ theme }) =>
     focusableOutlineCSS(theme.colors.border.focus, theme.colors.bg.secondary)};
 `;
@@ -142,11 +141,9 @@ const TitleTableCellContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-
   ${MoreVerticalButton} {
     margin: 10px auto;
   }
-
   &:hover ${MoreVerticalButton}, &:active ${MoreVerticalButton} {
     opacity: 1;
   }
@@ -168,7 +165,6 @@ function onBlurDeselectAll() {
 export default function StoryListView({
   handleSortChange,
   handleSortDirectionChange,
-  isLoading,
   pageSize,
   renameStory,
   sortDirection,
@@ -336,102 +332,98 @@ export default function StoryListView({
             )}
           </TableRow>
         </StickyTableHeader>
-        {!isLoading && (
-          <TableBody>
-            {stories.map((story) => (
-              <StyledTableRow key={`story-${story.id}`}>
-                <TablePreviewCell>
-                  <PreviewContainer>
-                    <PreviewErrorBoundary>
-                      <PreviewPage page={story.pages[0]} pageSize={pageSize} />
-                    </PreviewErrorBoundary>
-                  </PreviewContainer>
-                </TablePreviewCell>
-                <TableCell>
-                  <TitleTableCellContainer>
-                    {renameStory.id === story.id ? (
-                      <InlineInputForm
-                        onEditComplete={(newTitle) =>
-                          renameStory.handleOnRenameStory(story, newTitle)
-                        }
-                        onEditCancel={renameStory.handleCancelRename}
-                        value={story.title}
-                        id={story.id}
-                        label={__('Rename story', 'web-stories')}
+        <TableBody>
+          {stories.map((story) => (
+            <StyledTableRow key={`story-${story.id}`}>
+              <TablePreviewCell>
+                <PreviewContainer>
+                  <PreviewErrorBoundary>
+                    <PreviewPage page={story.pages[0]} pageSize={pageSize} />
+                  </PreviewErrorBoundary>
+                </PreviewContainer>
+              </TablePreviewCell>
+              <TableCell>
+                <TitleTableCellContainer>
+                  {renameStory.id === story.id ? (
+                    <InlineInputForm
+                      onEditComplete={(newTitle) =>
+                        renameStory.handleOnRenameStory(story, newTitle)
+                      }
+                      onEditCancel={renameStory.handleCancelRename}
+                      value={story.title}
+                      id={story.id}
+                      label={__('Rename story', 'web-stories')}
+                    />
+                  ) : (
+                    <>
+                      <Headline
+                        tabIndex={0}
+                        onFocus={onFocusSelectAll}
+                        onBlur={onBlurDeselectAll}
+                        size={THEME_CONSTANTS.TYPOGRAPHY.PRESET_SIZES.XXX_SMALL}
+                        as="h4"
+                      >
+                        {titleFormatted(story.title)}
+                      </Headline>
+                      <StoryMenu
+                        onMoreButtonSelected={storyMenu.handleMenuToggle}
+                        contextMenuId={storyMenu.contextMenuId}
+                        story={story}
+                        menuItems={generateStoryMenu({
+                          menuItemActions: storyMenu.menuItemActions,
+                          menuItems: storyMenu.menuItems,
+                          story,
+                        })}
+                        verticalAlign="center"
                       />
-                    ) : (
-                      <>
-                        <Headline
-                          tabIndex={0}
-                          onFocus={onFocusSelectAll}
-                          onBlur={onBlurDeselectAll}
-                          size={
-                            THEME_CONSTANTS.TYPOGRAPHY.PRESET_SIZES.XX_SMALL
-                          }
-                          as="h4"
-                        >
-                          {titleFormatted(story.title)}
-                        </Headline>
-                        <StoryMenu
-                          onMoreButtonSelected={storyMenu.handleMenuToggle}
-                          contextMenuId={storyMenu.contextMenuId}
-                          story={story}
-                          menuItems={generateStoryMenu({
-                            menuItemActions: storyMenu.menuItemActions,
-                            menuItems: storyMenu.menuItems,
-                            story,
-                          })}
-                          verticalAlign="center"
-                        />
-                      </>
-                    )}
-                  </TitleTableCellContainer>
-                </TableCell>
-                <TableCell>
+                    </>
+                  )}
+                </TitleTableCellContainer>
+              </TableCell>
+              <TableCell>
+                <Text
+                  as="span"
+                  size={THEME_CONSTANTS.TYPOGRAPHY.PRESET_SIZES.SMALL}
+                >
+                  {story.author || '—'}
+                </Text>
+              </TableCell>
+              <TableCell>
+                <Text
+                  as="span"
+                  size={THEME_CONSTANTS.TYPOGRAPHY.PRESET_SIZES.SMALL}
+                >
+                  {getRelativeDisplayDate(story.created_gmt)}
+                </Text>
+              </TableCell>
+              <TableCell>
+                <Text
+                  as="span"
+                  size={THEME_CONSTANTS.TYPOGRAPHY.PRESET_SIZES.SMALL}
+                >
+                  {getRelativeDisplayDate(story.modified_gmt)}
+                </Text>
+              </TableCell>
+              {storyStatus !== STORY_STATUS.DRAFT && (
+                <TableStatusCell>
                   <Text
                     as="span"
                     size={THEME_CONSTANTS.TYPOGRAPHY.PRESET_SIZES.SMALL}
                   >
-                    {story.author || '—'}
+                    {story.status === STORY_STATUS.PUBLISH &&
+                      __('Published', 'web-stories')}
+                    {story.status === STORY_STATUS.FUTURE &&
+                      __('Scheduled', 'web-stories')}
+                    {story.status === STORY_STATUS.DRAFT &&
+                      __('Draft', 'web-stories')}
+                    {story.status === STORY_STATUS.PRIVATE &&
+                      __('Private', 'web-stories')}
                   </Text>
-                </TableCell>
-                <TableCell>
-                  <Text
-                    as="span"
-                    size={THEME_CONSTANTS.TYPOGRAPHY.PRESET_SIZES.SMALL}
-                  >
-                    {getRelativeDisplayDate(story.created_gmt)}
-                  </Text>
-                </TableCell>
-                <TableCell>
-                  <Text
-                    as="span"
-                    size={THEME_CONSTANTS.TYPOGRAPHY.PRESET_SIZES.SMALL}
-                  >
-                    {getRelativeDisplayDate(story.modified_gmt)}
-                  </Text>
-                </TableCell>
-                {storyStatus !== STORY_STATUS.DRAFT && (
-                  <TableStatusCell>
-                    <Text
-                      as="span"
-                      size={THEME_CONSTANTS.TYPOGRAPHY.PRESET_SIZES.SMALL}
-                    >
-                      {story.status === STORY_STATUS.PUBLISH &&
-                        __('Published', 'web-stories')}
-                      {story.status === STORY_STATUS.FUTURE &&
-                        __('Scheduled', 'web-stories')}
-                      {story.status === STORY_STATUS.DRAFT &&
-                        __('Draft', 'web-stories')}
-                      {story.status === STORY_STATUS.PRIVATE &&
-                        __('Private', 'web-stories')}
-                    </Text>
-                  </TableStatusCell>
-                )}
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        )}
+                </TableStatusCell>
+              )}
+            </StyledTableRow>
+          ))}
+        </TableBody>
       </Table>
     </ListView>
   );
@@ -440,7 +432,6 @@ export default function StoryListView({
 StoryListView.propTypes = {
   handleSortChange: PropTypes.func.isRequired,
   handleSortDirectionChange: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool,
   pageSize: PageSizePropType,
   renameStory: RenameStoryPropType,
   sortDirection: PropTypes.string.isRequired,
