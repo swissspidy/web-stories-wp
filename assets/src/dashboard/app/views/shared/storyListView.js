@@ -25,9 +25,6 @@ import { __ } from '@web-stories-wp/i18n';
 /**
  * Internal dependencies
  */
-/**
- * Internal dependencies
- */
 import {
   StoriesPropType,
   RenameStoryPropType,
@@ -95,9 +92,11 @@ const ArrowIcon = styled.div`
   display: inline-grid;
   color: ${({ theme }) => theme.colors.fg.primary};
   vertical-align: middle;
+
   svg {
     visibility: ${({ active }) => (active ? 'visible' : 'hidden')};
     transition: transform 0.15s;
+
     ${({ asc }) =>
       asc &&
       css`
@@ -115,6 +114,7 @@ const ArrowIconWithTitle = styled(ArrowIcon)`
   display: ${({ active }) => !active && 'none'};
   position: absolute;
   top: 16px;
+
   @media ${({ theme }) => theme.breakpoint.mobile} {
     margin-left: 4px;
   }
@@ -127,6 +127,7 @@ const HeavyTitle = styled(Text)`
 const SelectableTitle = styled(HeavyTitle).attrs({ tabIndex: 0 })`
   color: ${({ theme }) => theme.colors.fg.linkNormal};
   cursor: pointer;
+
   ${({ theme }) =>
     focusableOutlineCSS(theme.colors.border.focus, theme.colors.bg.secondary)};
 `;
@@ -141,9 +142,11 @@ const TitleTableCellContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
+
   ${MoreVerticalButton} {
     margin: 10px auto;
   }
+
   &:hover ${MoreVerticalButton}, &:active ${MoreVerticalButton} {
     opacity: 1;
   }
