@@ -30,12 +30,14 @@ import {
   Button,
   BUTTON_TYPES,
   BUTTON_SIZES,
+  LoadingSpinner,
 } from '../../../../../../design-system';
 import { StoriesPropType, StoryActionsPropType } from '../../../../../types';
 import { titleFormatted } from '../../../../../utils';
 import {
   SortPropTypes,
   ViewPropTypes,
+  ShowStoriesWhileLoadingPropType,
 } from '../../../../../utils/useStoryView';
 import {
   VIEW_STYLE,
@@ -45,11 +47,12 @@ import {
 } from '../../../../../constants';
 import { useSnackbarContext } from '../../../../snackbar';
 import { StoryGridView, StoryListView } from '../../../shared';
+import { LoadingContainer } from '../../../../../components';
 
 const ACTIVE_DIALOG_DELETE_STORY = 'DELETE_STORY';
 function StoriesView({
   filterValue,
-  isLoading,
+  loading,
   sort,
   storyActions,
   stories,
@@ -220,13 +223,19 @@ function StoriesView({
     };
   }, [handleOnRenameStory, setTitleRenameId, titleRenameId]);
 
-  const ActiveView = useMemo(
-    () =>
-      view.style === VIEW_STYLE.LIST ? (
+  const ActiveView = useMemo(() => {
+    // Stories should be shown when we trigger a fetch from `InfiniteScroll`.
+    // Stories should be hidden when a filter is changed.
+    if (view.style === VIEW_STYLE.LIST) {
+      // StoryListView needs to show the table header when loading stories
+      // when filtering.
+      return (
         <StoryListView
           handleSortChange={sort.set}
           handleSortDirectionChange={sort.setDirection}
-          isLoading={isLoading}
+          hideStoryList={
+            loading?.isLoading && !loading?.showStoriesWhileLoading.current
+          }
           pageSize={view.pageSize}
           renameStory={renameStory}
           sortDirection={sort.direction}
@@ -235,13 +244,20 @@ function StoriesView({
           storySort={sort.value}
           storyStatus={filterValue}
         />
-      ) : (
+      );
+    }
+
+    if (
+      !loading?.isLoading ||
+      (loading?.isLoading && loading?.showStoriesWhileLoading.current)
+    ) {
+      return (
         <StoryGridView
           bottomActionLabel={__('Open in editor', 'web-stories')}
           centerActionLabelByStatus={
             enableStoryPreviews && STORY_ITEM_CENTER_ACTION_LABELS
           }
-          isLoading={isLoading}
+          isLoading={loading?.isLoading}
           pageSize={view.pageSize}
           renameStory={renameStory}
           previewStory={storyActions.handlePreviewStory}
@@ -250,29 +266,37 @@ function StoriesView({
           returnStoryFocusId={returnStoryFocusId}
           initialFocusStoryId={initialFocusStoryId}
         />
-      ),
-    [
-      enableStoryPreviews,
-      filterValue,
-      initialFocusStoryId,
-      isLoading,
-      renameStory,
-      returnStoryFocusId,
-      sort?.direction,
-      sort?.set,
-      sort?.setDirection,
-      sort?.value,
-      stories,
-      storyActions?.handlePreviewStory,
-      storyMenu,
-      view?.pageSize,
-      view?.style,
-    ]
-  );
+      );
+    }
+
+    // Hide all stories when filter is triggered.
+    return null;
+  }, [
+    enableStoryPreviews,
+    loading,
+    filterValue,
+    initialFocusStoryId,
+    renameStory,
+    returnStoryFocusId,
+    sort?.direction,
+    sort?.set,
+    sort?.setDirection,
+    sort?.value,
+    stories,
+    storyActions?.handlePreviewStory,
+    storyMenu,
+    view?.pageSize,
+    view?.style,
+  ]);
 
   return (
     <>
       {ActiveView}
+      {loading?.isLoading && !loading?.showStoriesWhileLoading.current && (
+        <LoadingContainer>
+          <LoadingSpinner />
+        </LoadingContainer>
+      )}
       {isActiveDeleteStoryDialog && (
         <Dialog
           isOpen
@@ -327,7 +351,10 @@ function StoriesView({
 
 StoriesView.propTypes = {
   filterValue: PropTypes.string,
-  isLoading: PropTypes.bool,
+  loading: PropTypes.shape({
+    isLoading: PropTypes.bool,
+    showStoriesWhileLoading: ShowStoriesWhileLoadingPropType,
+  }),
   sort: SortPropTypes,
   storyActions: StoryActionsPropType,
   stories: StoriesPropType,

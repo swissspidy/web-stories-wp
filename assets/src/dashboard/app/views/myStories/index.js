@@ -75,7 +75,15 @@ function MyStories() {
     })
   );
 
-  const { filter, page, activePreview, search, sort, view } = useStoryView({
+  const {
+    filter,
+    page,
+    activePreview,
+    search,
+    sort,
+    view,
+    showStoriesWhileLoading,
+  } = useStoryView({
     filters: STORY_STATUSES,
     totalPages,
   });
@@ -99,6 +107,13 @@ function MyStories() {
     sort.value,
     view.style,
   ]);
+
+  useEffect(() => {
+    // reset ref state after request is finished
+    if (!isLoading) {
+      showStoriesWhileLoading.current = false;
+    }
+  }, [isLoading, showStoriesWhileLoading]);
 
   const [lastActiveStoryId, setLastActiveStoryId] = useState(null);
 
@@ -159,6 +174,7 @@ function MyStories() {
         }}
         view={view}
         initialFocusStoryId={lastActiveStoryId}
+        showStoriesWhileLoading={showStoriesWhileLoading}
       />
 
       <Layout.Fixed>

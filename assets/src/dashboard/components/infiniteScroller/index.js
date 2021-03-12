@@ -104,7 +104,7 @@ const InfiniteScroller = ({
   const loadingAlert = useMemo(() => {
     if (loadState === STATE.loading_internal) {
       return loadingAriaMessage;
-    } else if (!canLoadMore) {
+    } else if (loadState !== STATE.loading_external && !canLoadMore) {
       return allDataLoadedAriaMessage;
     }
     return null;
@@ -161,16 +161,24 @@ const InfiniteScroller = ({
   }, []);
 
   const loadingContent = useMemo(() => {
-    return canLoadMore ? (
+    if (loadState === STATE.loading_external) {
+      return null;
+    }
+
+    if (!canLoadMore) {
+      return (
+        <Text size={THEME_CONSTANTS.TYPOGRAPHY.PRESET_SIZES.SMALL}>
+          {allDataLoadedMessage}
+        </Text>
+      );
+    }
+
+    return (
       <LoadingContainer>
         <LoadingSpinner animationSize={50} circleSize={6} />
       </LoadingContainer>
-    ) : (
-      <Text size={THEME_CONSTANTS.TYPOGRAPHY.PRESET_SIZES.SMALL}>
-        {allDataLoadedMessage}
-      </Text>
     );
-  }, [allDataLoadedMessage, canLoadMore]);
+  }, [allDataLoadedMessage, canLoadMore, loadState]);
 
   return (
     <ScrollMessage data-testid="load-more-on-scroll" ref={loadingRef}>
