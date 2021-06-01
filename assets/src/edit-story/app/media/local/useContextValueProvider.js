@@ -64,7 +64,7 @@ export default function useContextValueProvider(reducerState, reducerActions) {
     deleteMediaElement,
   } = reducerActions;
   const {
-    actions: { getMedia, updateMedia },
+    actions: { getMedia, updateMedia, processMedia },
   } = useAPI();
 
   const fetchMedia = useCallback(
@@ -120,7 +120,10 @@ export default function useContextValueProvider(reducerState, reducerActions) {
   });
 
   const {
-    allowedMimeTypes: { video: allowedVideoMimeTypes },
+    allowedMimeTypes: {
+      video: allowedVideoMimeTypes,
+      image: allowedImageMimeTypes,
+    },
   } = useConfig();
 
   const stateRef = useRef();
@@ -180,11 +183,33 @@ export default function useContextValueProvider(reducerState, reducerActions) {
     [allowedVideoMimeTypes, uploadVideoPoster]
   );
 
+  const generateMissingImageSizes = useCallback(
+    ({ mimeType, id, local, sizes }) => {
+      if (
+        allowedImageMimeTypes.includes(mimeType) &&
+        !local &&
+        id &&
+        sizes &&
+        !sizes['web-stories-thumbnail']
+      ) {
+        processMedia(id);
+      }
+    },
+    [allowedImageMimeTypes, processMedia]
+  );
+
   // Whenever media items in the library change,
   // generate missing posters if needed.
   useEffect(() => {
     media?.forEach((mediaElement) => generateMissingPosters(mediaElement));
-  }, [media, mediaType, searchTerm, generateMissingPosters]);
+    media?.forEach((mediaElement) => generateMissingImageSizes(mediaElement));
+  }, [
+    media,
+    mediaType,
+    searchTerm,
+    generateMissingPosters,
+    generateMissingImageSizes,
+  ]);
 
   return {
     state: {

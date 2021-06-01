@@ -265,6 +265,25 @@ function APIProvider({ children }) {
   );
 
   /**
+   * Process Existing media.
+   *
+   * @param  {number} mediaId
+   * @return {Promise} Media Object Promise.
+   */
+  const processMedia = useCallback(
+    (mediaId) => {
+      return apiFetch({
+        path: `${media}${mediaId}/post-process`,
+        data: {
+          action: 'create-image-subsizes',
+        },
+        method: 'POST',
+      });
+    },
+    [media]
+  );
+
+  /**
    * Delete existing media.
    *
    * @param  {number} mediaId
@@ -455,6 +474,7 @@ function APIProvider({ children }) {
       getAuthors,
       uploadMedia,
       updateMedia,
+      processMedia,
       deleteMedia,
       saveMetaBoxes,
       getStatusCheck,
