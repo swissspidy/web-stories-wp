@@ -20,12 +20,15 @@
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { __, sprintf } from '@web-stories-wp/i18n';
+import { Profiler } from 'react';
 
 /**
  * Internal dependencies
  */
 import { ReorderableSeparator, ReorderableItem } from '../reorderable';
 import PagePreview from './pagepreview';
+import PagePreview2 from './pagepreview2';
+import { getProfileData, logProfileData } from '../../profiler';
 import useCarousel from './useCarousel';
 import { THUMBNAIL_LINE_WIDTH } from './constants';
 
@@ -129,7 +132,7 @@ function CarouselPage({ pageId, index }) {
         </PageSeparator>
       )}
       <ReorderablePage position={index} margin={pageThumbMargin}>
-        <PagePreview
+        <PagePreview2
           tabIndex={isCurrentPage && hasMultiplePages ? 0 : -1}
           onClick={() => clickPage(page)}
           role="option"
