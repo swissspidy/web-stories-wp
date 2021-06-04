@@ -42,7 +42,7 @@ const Element = styled.p`
   ${elementWithTextParagraphStyle}
 
   opacity: 0;
-  user-select: auto;
+  user-select: none;
 `;
 
 function TextFrame({ element, element: { id, content, ...rest }, wrapperRef }) {
@@ -147,6 +147,7 @@ function TextFrame({ element, element: { id, content, ...rest }, wrapperRef }) {
     <Element
       ref={elementRef}
       data-testid="textFrame"
+      data-fix-caret="true"
       className="syncMargin"
       dangerouslySetInnerHTML={{ __html: content }}
       element={element}

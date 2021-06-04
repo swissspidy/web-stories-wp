@@ -50,7 +50,15 @@ function getCaretCharacterOffsetWithin(element, clientX, clientY) {
           range.setStart(caretPosition.offsetNode, caretPosition.offset);
         }
       } else if (doc.caretRangeFromPoint) {
+        // Little hack to make it work on Safari.
+        const elementsToFix = document.querySelectorAll('[data-fix-caret]');
+        for (const elementToFix of elementsToFix) {
+          elementToFix.style.webkitUserSelect = 'auto';
+        }
         range = document.caretRangeFromPoint(clientX, clientY);
+        for (const elementToFix of elementsToFix) {
+          elementToFix.style.webkitUserSelect = 'none';
+        }
       }
     }
     if (!range) {

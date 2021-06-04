@@ -36,12 +36,13 @@ import CanvasElementDropzone from './canvasElementDropzone';
 
 const Background = styled.section.attrs({
   'aria-label': __('Canvas', 'web-stories'),
+  'data-fix-caret': true,
 })`
   background-color: ${({ theme }) => theme.colors.bg.primary};
   width: 100%;
   height: 100%;
   position: relative;
-  user-select: auto;
+  user-select: none;
 `;
 
 function CanvasLayout() {

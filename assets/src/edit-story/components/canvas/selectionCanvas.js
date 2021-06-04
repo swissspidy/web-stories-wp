@@ -46,7 +46,7 @@ const Container = withOverlay(styled.div`
   bottom: 0;
   width: 100%;
   height: 100%;
-  user-select: auto;
+  user-select: none;
 `);
 
 const Lasso = styled.div`
@@ -205,6 +205,7 @@ function SelectionCanvas({ children }) {
       onMouseDown={onMouseDown}
       onMouseMove={onMouseMove}
       onMouseUp={onMouseUp}
+      data-fix-caret="true"
     >
       {children}
       <InOverlay ref={overlayRef}>
