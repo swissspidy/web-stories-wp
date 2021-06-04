@@ -46,7 +46,7 @@ const Container = withOverlay(styled.div`
   bottom: 0;
   width: 100%;
   height: 100%;
-  user-select: none;
+  user-select: auto;
 `);
 
 const Lasso = styled.div`

@@ -42,7 +42,7 @@ const Element = styled.p`
   ${elementWithTextParagraphStyle}
 
   opacity: 0;
-  user-select: none;
+  user-select: auto;
 `;
 
 function TextFrame({ element, element: { id, content, ...rest }, wrapperRef }) {

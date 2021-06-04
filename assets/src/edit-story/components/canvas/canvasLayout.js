@@ -41,7 +41,7 @@ const Background = styled.section.attrs({
   width: 100%;
   height: 100%;
   position: relative;
-  user-select: none;
+  user-select: auto;
 `;
 
 function CanvasLayout() {
