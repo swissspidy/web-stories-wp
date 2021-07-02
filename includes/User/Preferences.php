@@ -84,9 +84,9 @@ class Preferences extends Service_Base {
 			[
 				'type'              => 'boolean',
 				'sanitize_callback' => 'rest_sanitize_boolean',
-				'default'           => true,
+				'default'           => current_user_can( 'upload_files' ),
 				'show_in_rest'      => true,
-				'auth_callback'     => [ $this, 'can_edit_current_user' ],
+				'auth_callback'     => [ $this, 'can_upload_files' ],
 				'single'            => true,
 			]
 		);
@@ -116,5 +116,18 @@ class Preferences extends Service_Base {
 	 */
 	public function can_edit_current_user() {
 		return current_user_can( 'edit_user', get_current_user_id() );
+	}
+
+	/**
+	 * Auth callback.
+	 *
+	 * @return bool
+	 */
+	public function can_upload_files() {
+		if ( ! $this->can_edit_current_user() ) {
+			return false;
+		}
+
+		return current_user_can( 'upload_files', get_current_user_id() );
 	}
 }
