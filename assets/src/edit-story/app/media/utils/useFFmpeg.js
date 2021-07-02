@@ -37,7 +37,7 @@ export const VIDEO_SIZE_THRESHOLD = {
   WIDTH: 1280,
 };
 
-const isDevelopment = process.env.NODE_ENV === 'development';
+const isDevelopment = WEB_STORIES_ENV === 'development';
 
 /**
  * Checks whether the file size is too large for transcoding.

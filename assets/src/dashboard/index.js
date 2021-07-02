@@ -30,7 +30,7 @@ import { initializeTracking } from '@web-stories-wp/tracking';
 import App from './app';
 import './style.css'; // This way the general dashboard styles are loaded before all the component styles.
 
-__webpack_public_path__ = global.webStoriesDashboardSettings.publicPath;
+__webpack_public_path__ = window.webStoriesDashboardSettings.publicPath;
 
 /**
  * Initializes the Web Stories dashboard screen.

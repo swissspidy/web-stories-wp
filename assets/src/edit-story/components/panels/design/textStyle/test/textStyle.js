@@ -135,7 +135,7 @@ describe.skip('Panels/TextStyle', () => {
   let controls;
 
   beforeEach(() => {
-    global.fetch.resetMocks();
+    window.fetch.resetMocks();
 
     textElement = {
       id: '1',

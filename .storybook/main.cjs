@@ -33,12 +33,39 @@ module.exports = {
     '@storybook/addon-backgrounds/register',
     'storybook-rtl-addon',
   ],
+  core: {
+    builder: 'webpack5',
+  },
   reactOptions: {
-    fastRefresh: true,
+    // Disabled due to compatibility issues with webpack 5.
+    // See https://github.com/pmmmwh/react-refresh-webpack-plugin/issues/308
+    fastRefresh: false,
     strictMode: true,
   },
   //eslint-disable-next-line require-await
   webpackFinal: async (config) => {
+    // webpack < 5 used to include polyfills for node.js core modules by default.
+    // Prevent ModuleNotFoundError for this dependency.
+    config.resolve = {
+      ...config.resolve,
+      fallback: {
+        ...config.resolve.fallback,
+        // eslint-disable-next-line node/no-extraneous-require
+        stream: require.resolve('stream-browserify'),
+      },
+    };
+
+    // Avoid having to provide full file extension for imports.
+    // See https://webpack.js.org/configuration/module/#resolvefullyspecified
+
+    config.module.rules = config.module.rules.map((rule) => ({
+      ...rule,
+      resolve: {
+        ...rule.resolve,
+        fullySpecified: false,
+      },
+    }));
+
     // Modifies storybook's webpack config to use svgr instead of file-loader.
     // see https://github.com/storybookjs/storybook/issues/5613
 

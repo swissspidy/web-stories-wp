@@ -18,12 +18,12 @@
  * External dependencies
  */
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 /**
  * WordPress dependencies
  */
 const DependencyExtractionWebpackPlugin = require('@wordpress/dependency-extraction-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 /**
  * Internal dependencies
@@ -37,20 +37,22 @@ function getConfig(group, { coverage = false } = {}) {
       ...webpackConfig,
       // Karma watches the test entry points, so we don't need to specify
       // them here. Webpack watches dependencies.
-      entry: null,
+      entry: undefined,
       mode: 'development',
       devtool: 'inline-source-map',
       output: {
         ...webpackConfig.output,
         path: path.resolve(process.cwd(), 'assets', 'testjs'),
       },
-      // DependencyExtractionWebpackPlugin and HtmlWebpackPlugin are not needed for tests and
-      // otherwise has some failures.
-      plugins: webpackConfig.plugins.filter(
-        (plugin) =>
-          !(plugin instanceof DependencyExtractionWebpackPlugin) &&
-          !(plugin instanceof HtmlWebpackPlugin)
-      ),
+      plugins: [
+        // DependencyExtractionWebpackPlugin and HtmlWebpackPlugin are not needed for tests and
+        // otherwise has some failures.
+        ...webpackConfig.plugins.filter(
+          (plugin) =>
+            !(plugin instanceof DependencyExtractionWebpackPlugin) &&
+            !(plugin instanceof HtmlWebpackPlugin)
+        ),
+      ],
     }))[0];
   if (coverage) {
     config.module.rules.push({
