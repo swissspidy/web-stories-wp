@@ -279,6 +279,11 @@ class Editor extends Service_Base {
 		$mime_image_types         = $this->get_allowed_image_mime_types();
 		$page_templates_rest_base = $this->get_post_type_rest_base( Page_Template_Post_Type::POST_TYPE_SLUG );
 
+		$media_filters = [
+			[ 'value' => 'image', 'label' => __( 'Images', 'web-stories' ) ],
+			[ 'value' => 'video', 'label' => __( 'Video', 'web-stories' ) ],
+		];
+
 		$settings = [
 			'id'         => 'web-stories-editor',
 			'config'     => [
@@ -323,6 +328,7 @@ class Editor extends Service_Base {
 				],
 				'version'                      => WEBSTORIES_VERSION,
 				'nonce'                        => $nonce,
+				'mediaFilters'                 => $media_filters,
 				'encodeMarkup'                 => $this->decoder->supports_decoding(),
 				'metaBoxes'                    => $this->meta_boxes->get_meta_boxes_per_location(),
 				'ffmpegCoreUrl'                => trailingslashit( WEBSTORIES_CDN_URL ) . 'js/@ffmpeg/core@0.10.0/dist/ffmpeg-core.js',

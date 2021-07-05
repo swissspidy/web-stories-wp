@@ -88,11 +88,6 @@ const SearchCount = styled(Text).attrs({
 `;
 
 const FILTER_NONE = LOCAL_MEDIA_TYPE_ALL;
-const FILTERS = [
-  { value: FILTER_NONE, label: __('All Types', 'web-stories') },
-  { value: 'image', label: __('Images', 'web-stories') },
-  { value: 'video', label: __('Video', 'web-stories') },
-];
 
 function MediaPane(props) {
   const {
@@ -156,6 +151,7 @@ function MediaPane(props) {
       image: allowedImageMimeTypes,
       video: allowedVideoMimeTypes,
     },
+    mediaFilters,
   } = useConfig();
 
   const { isFeatureEnabled, isTranscodingEnabled } = useFFmpeg();
@@ -192,6 +188,11 @@ function MediaPane(props) {
   const isSearching = searchTerm.length > 0;
 
   const onClose = resetWithFetch;
+
+  const FILTERS = [
+    { value: FILTER_NONE, label: __('All Types', 'web-stories') },
+    ...mediaFilters,
+  ];
 
   /**
    * Callback of select in media picker to insert media element.
