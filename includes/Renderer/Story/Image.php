@@ -81,11 +81,12 @@ class Image {
 				<?php
 				if ( ! empty( $this->story->get_poster_portrait() ) ) {
 					printf(
-						'<img src="%1$s" width="%2$d" height="%3$d" alt="%4$s" />',
+						'<img src="%1$s" width="%2$d" height="%3$d" alt="%4$s" class="%5$s" />',
 						esc_url( $this->story->get_poster_portrait() ),
 						absint( $args['width'] ),
 						absint( $args['height'] ),
-						esc_attr( $this->story->get_title() )
+						esc_attr( $this->story->get_title() ),
+						esc_attr( 'wp-image-' . $this->story->get_thumbnail_id() )
 					);
 				} else {
 					echo esc_html( $this->story->get_title() );
@@ -95,6 +96,8 @@ class Image {
 		</div>
 		<?php
 
-		return (string) ob_get_clean();
+		$output = (string) ob_get_clean();
+
+		return wp_filter_content_tags( $output, 'web_stories_render_image' );
 	}
 }

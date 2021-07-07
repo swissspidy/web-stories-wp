@@ -538,9 +538,10 @@ abstract class Renderer implements RenderingInterface, Iterator {
 		 * @var Story $story
 		 */
 		$story = $this->current();
-		
-		$poster_url = $story->get_poster_portrait();
 
+		$poster_url = $story->get_poster_portrait();
+		
+		ob_start();
 		if ( ! $poster_url ) {
 
 			?>
@@ -567,17 +568,31 @@ abstract class Renderer implements RenderingInterface, Iterator {
 						alt="<?php echo esc_attr( $story->get_title() ); ?>"
 					>
 					</amp-img>
-				<?php } else { ?>
-					<img
-						src="<?php echo esc_url( $poster_url ); ?>"
-						alt="<?php echo esc_attr( $story->get_title() ); ?>"
-						width="<?php echo absint( $this->width ); ?>"
-						height="<?php echo absint( $this->height ); ?>"
-					>
-				<?php } ?>
+					<?php
+				} else {
+
+					printf(
+						'<img src="%1$s" width="%2$d" height="%3$d" alt="%4$s" class="%5$s" />',
+						esc_url( $story->get_poster_portrait() ),
+						absint( $this->width ),
+						absint( $this->height ),
+						esc_attr( $story->get_title() ),
+						esc_attr( 'wp-image-' . $story->get_thumbnail_id() )
+					);
+
+				}
+				?>
 			</div>
 			<?php
 		}
+
+		$output = (string) ob_get_clean();
+		$view_type = $this->get_view_type();
+
+		$output = wp_filter_content_tags( $output, "web_stories_{$view_type}_renderer_poster" );
+
+		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+
 		$this->get_content_overlay();
 
 		if ( ! $this->is_amp() ) {
