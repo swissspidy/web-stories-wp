@@ -118,7 +118,7 @@ class Meta_Boxes extends Service_Base {
 	 *
 	 * @return string Meta box URL.
 	 */
-	public function get_meta_box_url( $story_id ) {
+	public function get_meta_box_url( int $story_id ) {
 		$meta_box_url = admin_url( 'post.php' );
 		$meta_box_url = add_query_arg(
 			[

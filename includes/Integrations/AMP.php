@@ -80,7 +80,7 @@ class AMP extends Service_Base {
 	 *
 	 * @return array Filtered options.
 	 */
-	public function filter_amp_options( $options ) {
+	public function filter_amp_options( array $options ) {
 		if ( $this->get_request_post_type() === Story_Post_Type::POST_TYPE_SLUG ) {
 			$options['theme_support']          = 'standard';
 			$options['supported_post_types'][] = Story_Post_Type::POST_TYPE_SLUG;
@@ -101,7 +101,7 @@ class AMP extends Service_Base {
 	 *
 	 * @return array Supportable post types.
 	 */
-	public function filter_supportable_post_types( $post_types ) {
+	public function filter_supportable_post_types( array $post_types ) {
 		if ( $this->get_request_post_type() === Story_Post_Type::POST_TYPE_SLUG ) {
 			$post_types = array_merge( $post_types, [ Story_Post_Type::POST_TYPE_SLUG ] );
 		} else {
@@ -119,7 +119,7 @@ class AMP extends Service_Base {
 	 * @param array $sanitizers Sanitizers.
 	 * @return array Sanitizers.
 	 */
-	public function add_amp_content_sanitizers( $sanitizers ) {
+	public function add_amp_content_sanitizers( array $sanitizers ) {
 		if ( ! is_singular( 'web-story' ) ) {
 			return $sanitizers;
 		}
@@ -162,7 +162,7 @@ class AMP extends Service_Base {
 	 * @param array     $error Validation error being sanitized.
 	 * @return null|bool Whether sanitized.
 	 */
-	public function filter_amp_validation_error_sanitized( $sanitized, $error ) {
+	public function filter_amp_validation_error_sanitized( bool $sanitized, array $error ) {
 		// Skip sanitization for missing publisher logos and poster portrait images.
 		if (
 			( isset( $error['node_type'], $error['node_name'], $error['parent_name'] ) ) &&
@@ -201,7 +201,7 @@ class AMP extends Service_Base {
 	 * @param DOMElement $element  The element considered for excluding from AMP-to-AMP linking. May be instance of `a`, `area`, or `form`.
 	 * @return bool Whether AMP-to-AMP is excluded.
 	 */
-	public function filter_amp_to_amp_linking_element_excluded( $excluded, $url, $rel, $element ) {
+	public function filter_amp_to_amp_linking_element_excluded( bool $excluded, string $url, array $rel, DOMElement $element ) {
 		if ( $element instanceof DOMElement && $element->parentNode instanceof DOMElement && 'amp-story-player' === $element->parentNode->tagName ) {
 			return true;
 		}
@@ -225,7 +225,7 @@ class AMP extends Service_Base {
 	 *
 	 * @return bool Whether post should be skipped from AMP.
 	 */
-	public function filter_amp_skip_post( $skipped, $post ) {
+	public function filter_amp_skip_post( bool $skipped, int $post ) {
 		// This is the opposite to the `AMP__VERSION >= WEBSTORIES_AMP_VERSION` check in the HTML renderer.
 		if (
 			'web-story' === get_post_type( $post )
@@ -306,7 +306,7 @@ class AMP extends Service_Base {
 	 *
 	 * @return string|null Post type or null if validated URL is not for a singular post.
 	 */
-	protected function get_validated_url_post_type( $post_id ) {
+	protected function get_validated_url_post_type( int $post_id ) {
 		if ( empty( $post_id ) ) {
 			return null;
 		}

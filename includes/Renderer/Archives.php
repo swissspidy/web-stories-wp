@@ -89,7 +89,7 @@ class Archives extends Service_Base {
 	 *
 	 * @return string
 	 */
-	public function embed_player( $content ) {
+	public function embed_player( string $content ) {
 		$post = get_post();
 
 		if ( is_feed() ) {

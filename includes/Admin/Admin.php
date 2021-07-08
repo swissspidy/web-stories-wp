@@ -77,7 +77,7 @@ class Admin extends Service_Base {
 	 *
 	 * @return string $class List of Classes.
 	 */
-	public function admin_body_class( $class ) {
+	public function admin_body_class( string $class ) {
 		$screen = $this->get_current_screen();
 		if ( ! $screen ) {
 			return $class;
@@ -112,7 +112,7 @@ class Admin extends Service_Base {
 	 *
 	 * @return string Pre-filled post content if applicable, or the default content otherwise.
 	 */
-	public function prefill_post_content( $content, $post ) {
+	public function prefill_post_content( string $content, $post ) {
 		if ( ! isset( $_GET['from-web-story'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return $content;
 		}
@@ -179,7 +179,7 @@ class Admin extends Service_Base {
 	 *
 	 * @return string Pre-filled post title if applicable, or the default title otherwise.
 	 */
-	public function prefill_post_title( $title ) {
+	public function prefill_post_title( string $title ) {
 		if ( ! isset( $_GET['from-web-story'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return $title;
 		}

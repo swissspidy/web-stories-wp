@@ -387,7 +387,7 @@ class Discovery extends Service_Base {
 	 *
 	 * @return array|false
 	 */
-	protected function get_poster( $post, $size = 'full' ) {
+	protected function get_poster( $post, string $size = 'full' ) {
 		if ( ! has_post_thumbnail( $post ) ) {
 			return false;
 		}

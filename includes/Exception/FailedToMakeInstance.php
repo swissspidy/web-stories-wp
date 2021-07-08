@@ -63,7 +63,7 @@ final class FailedToMakeInstance
 	 * @return self
 	 */
 	public static function for_circular_reference(
-		$interface_or_class,
+		string $interface_or_class,
 		InjectionChain $injection_chain
 	) {
 		$message = \sprintf(
@@ -89,7 +89,7 @@ final class FailedToMakeInstance
 	 *
 	 * @return self
 	 */
-	public static function for_unresolved_interface( $interface ) {
+	public static function for_unresolved_interface( string $interface ) {
 		$message = \sprintf(
 			'Could not resolve the interface "%s" to an instantiable class, probably forgot to bind an implementation.',
 			$interface
@@ -109,7 +109,7 @@ final class FailedToMakeInstance
 	 *
 	 * @return self
 	 */
-	public static function for_unreflectable_class( $interface_or_class ) {
+	public static function for_unreflectable_class( string $interface_or_class ) {
 		$message = \sprintf(
 			'Could not reflect on the interface or class "%s", probably not a valid FQCN.',
 			$interface_or_class
@@ -130,7 +130,7 @@ final class FailedToMakeInstance
 	 *                              constructor.
 	 * @return self
 	 */
-	public static function for_unresolved_argument( $argument_name, $class ) {
+	public static function for_unresolved_argument( string $argument_name, string $class ) {
 		$message = \sprintf(
 			'Could not resolve the argument "%s" while trying to instantiate the class "%s".',
 			$argument_name,
@@ -150,7 +150,7 @@ final class FailedToMakeInstance
 	 *
 	 * @return self
 	 */
-	public static function for_uninstantiated_shared_instance( $class ) {
+	public static function for_uninstantiated_shared_instance( string $class ) {
 		$message = \sprintf(
 			'Could not retrieve the shared instance for "%s" as it was not instantiated yet.',
 			$class
@@ -169,7 +169,7 @@ final class FailedToMakeInstance
 	 *
 	 * @return self
 	 */
-	public static function for_invalid_delegate( $class ) {
+	public static function for_invalid_delegate( string $class ) {
 		$message = \sprintf(
 			'Could not retrieve a delegate for "%s", none was defined.',
 			$class

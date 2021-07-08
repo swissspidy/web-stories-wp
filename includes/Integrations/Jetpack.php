@@ -89,7 +89,7 @@ class Jetpack extends Service_Base {
 	 *
 	 * @return array Modified list of post types.
 	 */
-	public function add_to_jetpack_sitemap( $post_types ) {
+	public function add_to_jetpack_sitemap( array $post_types ) {
 		$post_types[] = Story_Post_Type::POST_TYPE_SLUG;
 
 		return $post_types;
@@ -208,7 +208,7 @@ class Jetpack extends Service_Base {
 	 *
 	 * @return array
 	 */
-	protected function add_extra_data( array $data, $videopress_key ) {
+	protected function add_extra_data( array $data, string $videopress_key ) {
 		// Make video as optimized.
 		$data['media_source'] = 'video-optimization';
 
@@ -238,7 +238,7 @@ class Jetpack extends Service_Base {
 	 *
 	 * @return string
 	 */
-	protected function format_milliseconds( $milliseconds ) {
+	protected function format_milliseconds( int $milliseconds ) {
 		$seconds = floor( $milliseconds / 1000 );
 
 		if ( $seconds >= 1 ) {
@@ -263,7 +263,7 @@ class Jetpack extends Service_Base {
 	 *
 	 * @return void
 	 */
-	public function add_term( $mid, $object_id, $meta_key ) {
+	public function add_term( int $mid, int $object_id, string $meta_key ) {
 		if ( self::VIDEOPRESS_POSTER_META_KEY !== $meta_key ) {
 			return;
 		}
@@ -283,7 +283,7 @@ class Jetpack extends Service_Base {
 	 *
 	 * @return bool Whether the current request is an AMP request.
 	 */
-	public function force_amp_request( $is_amp_request ) {
+	public function force_amp_request( bool $is_amp_request ) {
 		if ( ! is_singular( Story_Post_Type::POST_TYPE_SLUG ) ) {
 			return $is_amp_request;
 		}

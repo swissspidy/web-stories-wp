@@ -146,7 +146,7 @@ class Editor extends Service_Base {
 	 *
 	 * @return bool Whether the editor has been replaced.
 	 */
-	public function replace_editor( $replace, $post ) {
+	public function replace_editor( bool $replace, $post ) {
 		if ( Story_Post_Type::POST_TYPE_SLUG === get_post_type( $post ) ) {
 
 			// Since the 'replace_editor' filter can be run multiple times, only load the
@@ -175,7 +175,7 @@ class Editor extends Service_Base {
 	 *
 	 * @return bool Whether to use the block editor.
 	 */
-	public function filter_use_block_editor_for_post_type( $use_block_editor, $post_type ) {
+	public function filter_use_block_editor_for_post_type( bool $use_block_editor, string $post_type ) {
 		if ( Story_Post_Type::POST_TYPE_SLUG === $post_type ) {
 			return false;
 		}
@@ -193,7 +193,7 @@ class Editor extends Service_Base {
 	 *
 	 * @return void
 	 */
-	public function admin_enqueue_scripts( $hook ) {
+	public function admin_enqueue_scripts( string $hook ) {
 		if ( ! $this->is_edit_screen() ) {
 			return;
 		}
@@ -353,7 +353,7 @@ class Editor extends Service_Base {
 	 *
 	 * @return void
 	 */
-	protected function setup_lock( $story_id ) {
+	protected function setup_lock( int $story_id ) {
 		if ( ! $this->experiments->is_experiment_enabled( 'enablePostLocking' ) ) {
 			return;
 		}

@@ -160,7 +160,7 @@ class Story_Post_Type extends Service_Base {
 	 *
 	 * @return array Array of query params.
 	 */
-	public function filter_rest_collection_params( $query_params, $post_type ) {
+	public function filter_rest_collection_params( array $query_params, $post_type ) {
 		if ( self::POST_TYPE_SLUG !== $post_type->name ) {
 			return $query_params;
 		}
@@ -182,7 +182,7 @@ class Story_Post_Type extends Service_Base {
 	 *
 	 * @return array Array of allowed fields.
 	 */
-	public function filter_revision_fields( $fields, $story ) {
+	public function filter_revision_fields( array $fields, array $story ) {
 		if ( self::POST_TYPE_SLUG === $story['post_type'] ) {
 			$fields['post_content_filtered'] = __( 'Story data', 'web-stories' );
 		}
@@ -203,7 +203,7 @@ class Story_Post_Type extends Service_Base {
 	 * @param WP_Query $query The WP_Query object.
 	 * @return bool Whether to pass-through or not.
 	 */
-	public function redirect_post_type_archive_urls( $bypass, $query ) {
+	public function redirect_post_type_archive_urls( bool $bypass, $query ) {
 		global $wp_rewrite;
 
 		// If a plugin has already utilized the pre_handle_404 function, return without action to avoid conflicts.
@@ -250,7 +250,7 @@ class Story_Post_Type extends Service_Base {
 	 *
 	 * @return array Bulk counts.
 	 */
-	public function bulk_post_updated_messages( array $bulk_messages, $bulk_counts ) {
+	public function bulk_post_updated_messages( array $bulk_messages, array $bulk_counts ) {
 		$bulk_messages[ self::POST_TYPE_SLUG ] = [
 			/* translators: %s: Number of stories. */
 			'updated'   => _n( '%s story updated.', '%s stories updated.', $bulk_counts['updated'], 'web-stories' ),
@@ -277,7 +277,7 @@ class Story_Post_Type extends Service_Base {
 	 *
 	 * @return array
 	 */
-	public function change_default_title( $data ) {
+	public function change_default_title( array $data ) {
 		if ( self::POST_TYPE_SLUG === $data['post_type'] && 'auto-draft' === $data['post_status'] ) {
 			$data['post_title'] = '';
 		}

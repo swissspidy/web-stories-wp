@@ -118,7 +118,7 @@ class Site_Kit extends Service_Base {
 	 *
 	 * @return array Modified configuration options.
 	 */
-	public function filter_site_kit_gtag_opt( $gtag_opt ) {
+	public function filter_site_kit_gtag_opt( array $gtag_opt ) {
 		if ( ! is_singular( Story_Post_Type::POST_TYPE_SLUG ) ) {
 			return $gtag_opt;
 		}

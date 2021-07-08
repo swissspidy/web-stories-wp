@@ -48,7 +48,7 @@ final class InvalidStopwatchEvent
 	 *
 	 * @return self
 	 */
-	public static function from_name_to_stop( $name ) {
+	public static function from_name_to_stop( string $name ) {
 		$message = \sprintf(
 			'The stopwatch event "%s" is not recognized and cannot be stopped.',
 			$name

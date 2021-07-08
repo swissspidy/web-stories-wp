@@ -258,7 +258,7 @@ abstract class ServiceBasedPlugin implements Plugin {
 	 *                           salvageable.
 	 * @return string[] Validated array of service mappings.
 	 */
-	protected function validate_services( $services, $fallback ) {
+	protected function validate_services( $services, array $fallback ) {
 		// If we don't have an array, something went wrong with filtering.
 		// Just use the fallback value in this case.
 		if ( ! is_array( $services ) ) {
@@ -295,7 +295,7 @@ abstract class ServiceBasedPlugin implements Plugin {
 	 * @param string $fqcn FQCN to use as base to generate an identifer.
 	 * @return string Identifier to use for the provided FQCN.
 	 */
-	protected function get_identifier_from_fqcn( $fqcn ) {
+	protected function get_identifier_from_fqcn( string $fqcn ) {
 		// Retrieve the short name from the FQCN first.
 		$short_name = substr( $fqcn, strrpos( $fqcn, '\\' ) + 1 );
 
@@ -320,7 +320,7 @@ abstract class ServiceBasedPlugin implements Plugin {
 	 *
 	 * @return void
 	 */
-	protected function register_service( $id, $class ) {
+	protected function register_service( string $id, $class ) {
 		// Only instantiate services that are actually needed.
 		if ( is_a( $class, Conditional::class, true )
 			&& ! $class::is_needed() ) {

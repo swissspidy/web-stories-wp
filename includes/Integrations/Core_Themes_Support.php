@@ -118,7 +118,7 @@ class Core_Themes_Support extends Service_Base {
 	 *
 	 * @return array Updated array of classes.
 	 */
-	public function add_core_theme_classes( $classes ) {
+	public function add_core_theme_classes( array $classes ) {
 
 		$classes[] = 'has-web-stories';
 

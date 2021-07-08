@@ -69,7 +69,7 @@ final class InvalidService
 	 *
 	 * @return self
 	 */
-	public static function from_service_id( $service_id ) {
+	public static function from_service_id( string $service_id ) {
 		$message = \sprintf(
 			'The service ID "%s" is not recognized and cannot be retrieved.',
 			$service_id

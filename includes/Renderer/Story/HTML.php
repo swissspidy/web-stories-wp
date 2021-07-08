@@ -127,7 +127,7 @@ class HTML {
 	 * @param array $sanitizers Sanitizers.
 	 * @return array Sanitizers.
 	 */
-	public function add_web_stories_amp_content_sanitizers( $sanitizers ) {
+	public function add_web_stories_amp_content_sanitizers( array $sanitizers ) {
 		$sanitizers[ Story_Sanitizer::class ] = [
 			'publisher_logo'             => $this->get_publisher_logo(),
 			'publisher'                  => $this->get_publisher_name(),
@@ -182,7 +182,7 @@ class HTML {
 	 *
 	 * @return string Filtered content.
 	 */
-	protected function replace_html_head( $content ) {
+	protected function replace_html_head( string $content ) {
 		$start_tag = '<meta name="web-stories-replace-head-start"/>';
 		$end_tag   = '<meta name="web-stories-replace-head-end"/>';
 
@@ -210,7 +210,7 @@ class HTML {
 	 *
 	 * @return string
 	 */
-	protected function replace_url_scheme( $content ) {
+	protected function replace_url_scheme( string $content ) {
 		if ( is_ssl() ) {
 			$search  = home_url( '', 'http' );
 			$replace = home_url( '', 'https' );
@@ -230,7 +230,7 @@ class HTML {
 	 *
 	 * @return string
 	 */
-	protected function print_analytics( $content ) {
+	protected function print_analytics( string $content ) {
 		ob_start();
 
 		/**
@@ -256,7 +256,7 @@ class HTML {
 	 *
 	 * @return string
 	 */
-	protected function print_social_share( $content ) {
+	protected function print_social_share( string $content ) {
 		$share_providers = [
 			[
 				'provider' => 'twitter',

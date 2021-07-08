@@ -68,7 +68,7 @@ class PluginRowMeta extends Service_Base {
 	 *
 	 * @return string[] Plugin row meta.
 	 */
-	public function get_plugin_row_meta( $meta, $plugin_file ) {
+	public function get_plugin_row_meta( array $meta, string $plugin_file ) {
 		if ( plugin_basename( WEBSTORIES_PLUGIN_FILE ) !== $plugin_file ) {
 			return $meta;
 		}

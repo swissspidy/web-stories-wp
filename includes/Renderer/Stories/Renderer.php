@@ -325,7 +325,7 @@ abstract class Renderer implements RenderingInterface, Iterator {
 	 *
 	 * @return bool Whether or not current view type matches the one passed.
 	 */
-	protected function is_view_type( $view_type ) {
+	protected function is_view_type( string $view_type ) {
 
 		return ( ! empty( $this->attributes['view_type'] ) && $view_type === $this->attributes['view_type'] );
 	}
@@ -566,7 +566,7 @@ abstract class Renderer implements RenderingInterface, Iterator {
 						alt="<?php echo esc_attr( $story->get_title() ); ?>"
 					>
 					</amp-img>
-				<?php } else { ?>
+<?php } else { ?>
 					<img
 						src="<?php echo esc_url( $poster_url ); ?>"
 						alt="<?php echo esc_attr( $story->get_title() ); ?>"
@@ -648,7 +648,7 @@ abstract class Renderer implements RenderingInterface, Iterator {
 	 * @return void
 	 * @since 1.5.0
 	 */
-	protected function generate_lightbox_html( $story ) {
+	protected function generate_lightbox_html( Story $story ) {
 		// Start collecting markup for the lightbox stories. This way we don't have to re-run the loop.
 		ob_start();
 
@@ -668,7 +668,7 @@ abstract class Renderer implements RenderingInterface, Iterator {
 	 * @return void
 	 * @since 1.5.0
 	 */
-	protected function generate_amp_lightbox_html_amp( $story ) {
+	protected function generate_amp_lightbox_html_amp( Story $story ) {
 		// Start collecting markup for the lightbox stories. This way we don't have to re-run the loop.
 		ob_start();
 		$lightbox_state = 'lightbox' . $story->get_id() . $this->instance_id;

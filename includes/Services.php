@@ -51,7 +51,7 @@ final class Services {
 	 *
 	 * @return Service
 	 */
-	public static function get( $service ) {
+	public static function get( string $service ) {
 		return self::get_container()->get( $service );
 	}
 
@@ -63,7 +63,7 @@ final class Services {
 	 * @param string $service Service ID to retrieve.
 	 * @return bool
 	 */
-	public static function has( $service ) {
+	public static function has( string $service ) {
 		return self::get_container()->has( $service );
 	}
 

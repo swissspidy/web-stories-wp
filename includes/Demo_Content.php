@@ -66,7 +66,7 @@ class Demo_Content {
 	 *
 	 * @return string Modified content.
 	 */
-	private function update_assets_urls( $content ) {
+	private function update_assets_urls( string $content ) {
 		$content = str_replace(
 			'https://replaceme.com/',
 			trailingslashit( WEBSTORIES_CDN_URL ),
@@ -83,7 +83,7 @@ class Demo_Content {
 	 *
 	 * @return string Localized text.
 	 */
-	private function localize_texts( $content ) {
+	private function localize_texts( string $content ) {
 		$replacements = [
 			// Page 1.
 			'L10N_PLACEHOLDER_1_1' => /* translators: demo content used in the "Get Started" story */

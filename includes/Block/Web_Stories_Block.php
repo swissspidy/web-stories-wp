@@ -225,7 +225,7 @@ class Web_Stories_Block extends Embed_Base {
 	 *
 	 * @return bool Whether or not block attributes have been initialized with given value.
 	 */
-	protected function initialize_block_attributes( $block_attributes = [] ) {
+	protected function initialize_block_attributes( array $block_attributes = [] ) {
 		if ( ! empty( $block_attributes ) && is_array( $block_attributes ) ) {
 			$this->block_attributes = $block_attributes;
 			return true;

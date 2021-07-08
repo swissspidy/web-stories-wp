@@ -376,7 +376,7 @@ class Media extends Service_Base {
 	 *
 	 * @return string
 	 */
-	public function get_callback_media_source( $prepared ) {
+	public function get_callback_media_source( array $prepared ) {
 		$id = $prepared['id'];
 
 		$terms = wp_get_object_terms( $id, self::STORY_MEDIA_TAXONOMY );
@@ -417,7 +417,7 @@ class Media extends Service_Base {
 	 *
 	 * @return array
 	 */
-	public function get_callback_featured_media_src( $prepared ) {
+	public function get_callback_featured_media_src( array $prepared ) {
 		$id    = $prepared['featured_media'];
 		$image = [];
 		if ( $id ) {
@@ -437,7 +437,7 @@ class Media extends Service_Base {
 	 *
 	 * @return array $response;
 	 */
-	public function wp_prepare_attachment_for_js( $response, $attachment ) {
+	public function wp_prepare_attachment_for_js( array $response, $attachment ) {
 		if ( 'video' === $response['type'] ) {
 			$thumbnail_id = (int) get_post_thumbnail_id( $attachment );
 			$image        = '';
@@ -503,7 +503,7 @@ class Media extends Service_Base {
 	 *
 	 * @return array
 	 */
-	public function get_thumbnail_data( $thumbnail_id ) {
+	public function get_thumbnail_data( int $thumbnail_id ) {
 		$img_src                       = wp_get_attachment_image_src( $thumbnail_id, 'full' );
 		list ( $src, $width, $height ) = $img_src;
 		$generated                     = $this->is_poster( $thumbnail_id );
@@ -522,7 +522,7 @@ class Media extends Service_Base {
 	 *
 	 * @return void
 	 */
-	public function delete_video_poster( $attachment_id ) {
+	public function delete_video_poster( int $attachment_id ) {
 		$post_id = get_post_meta( $attachment_id, self::POSTER_ID_POST_META_KEY, true );
 
 		if ( empty( $post_id ) ) {
@@ -545,7 +545,7 @@ class Media extends Service_Base {
 	 *
 	 * @return bool
 	 */
-	protected function is_poster( $post_id ) {
+	protected function is_poster( int $post_id ) {
 		$terms = wp_get_object_terms( $post_id, self::STORY_MEDIA_TAXONOMY );
 		if ( is_array( $terms ) && ! empty( $terms ) ) {
 			$slugs = wp_list_pluck( $terms, 'slug' );

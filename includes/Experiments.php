@@ -157,7 +157,7 @@ class Experiments extends Service_Base {
 	 *
 	 * @return void
 	 */
-	public function display_experiment_field( $args ) {
+	public function display_experiment_field( array $args ) {
 		$is_enabled_by_default = ! empty( $args['default'] );
 		$checked               = $is_enabled_by_default || $this->is_experiment_enabled( $args['id'] );
 		$disabled              = $is_enabled_by_default ? 'disabled' : '';
@@ -432,7 +432,7 @@ class Experiments extends Service_Base {
 	 *
 	 * @return array Experiment statuses with name as key and status as value.
 	 */
-	public function get_experiment_statuses( $group ) {
+	public function get_experiment_statuses( string $group ) {
 		$experiments = wp_list_filter( $this->get_experiments(), [ 'group' => $group ] );
 
 		if ( empty( $experiments ) ) {
@@ -456,7 +456,7 @@ class Experiments extends Service_Base {
 	 * @param string $name Experiment name.
 	 * @return array|null Experiment if found, null otherwise.
 	 */
-	protected function get_experiment( $name ) {
+	protected function get_experiment( string $name ) {
 		$experiment = wp_list_filter( $this->get_experiments(), [ 'name' => $name ] );
 		return ! empty( $experiment ) ? array_shift( $experiment ) : null;
 	}
@@ -470,7 +470,7 @@ class Experiments extends Service_Base {
 	 *
 	 * @return bool Whether the experiment is enabled.
 	 */
-	public function is_experiment_enabled( $name ) {
+	public function is_experiment_enabled( string $name ) {
 		$experiment = $this->get_experiment( $name );
 
 		if ( ! $experiment ) {

@@ -314,7 +314,7 @@ class Web_Stories_Compatibility {
 	 *
 	 * @return void
 	 */
-	protected function add_to_error( $code, $message, $data = '' ) {
+	protected function add_to_error( $code, string $message, $data = '' ) {
 		if ( ! in_array( $code, $this->error->get_error_codes(), true ) ) {
 			$this->error->add( $code, $message, $data );
 		}
@@ -387,7 +387,7 @@ class Web_Stories_Compatibility {
 	 * @param string $wp_version WordPress version.
 	 * @return void
 	 */
-	public function set_wp_version( $wp_version ) {
+	public function set_wp_version( string $wp_version ) {
 		$this->wp_version = $wp_version;
 	}
 
@@ -400,7 +400,7 @@ class Web_Stories_Compatibility {
 	 * @param string $php_version PHP version.
 	 * @return void
 	 */
-	public function set_php_version( $php_version ) {
+	public function set_php_version( string $php_version ) {
 		$this->php_version = $php_version;
 	}
 

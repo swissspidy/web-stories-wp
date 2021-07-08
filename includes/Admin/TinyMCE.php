@@ -159,7 +159,7 @@ class TinyMCE extends Service_Base {
 	 *
 	 * @return string $tag The `<script>` tag for the enqueued script.
 	 */
-	public function script_loader_tag( $tag, $handle, $src ) {
+	public function script_loader_tag( string $tag, string $handle, string $src ) {
 		if ( self::SCRIPT_HANDLE === $handle ) {
 			$tag = str_replace( $src, '', $tag );
 			$tag = (string) preg_replace( '#<script src=\'\'(.*?)>(.*?)</script>#is', '', $tag );

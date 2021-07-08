@@ -221,7 +221,7 @@ final class SimpleInjector implements Injector {
 	 */
 	private function make_dependency(
 		InjectionChain $injection_chain,
-		$interface_or_class
+		string $interface_or_class
 	) {
 		$injection_chain = $this->resolve(
 			$injection_chain,
@@ -269,7 +269,7 @@ final class SimpleInjector implements Injector {
 	 */
 	private function resolve(
 		InjectionChain $injection_chain,
-		$interface_or_class
+		string $interface_or_class
 	) {
 		if ( $injection_chain->is_in_chain( $interface_or_class ) ) {
 			// Circular reference detected, aborting.
@@ -308,7 +308,7 @@ final class SimpleInjector implements Injector {
 	private function get_dependencies_for(
 		InjectionChain $injection_chain,
 		ReflectionClass $reflection,
-		$arguments = []
+		array $arguments = []
 	) {
 		$constructor = $reflection->getConstructor();
 		$class       = $reflection->getName();
@@ -362,9 +362,9 @@ final class SimpleInjector implements Injector {
 	 */
 	private function resolve_argument(
 		InjectionChain $injection_chain,
-		$class,
+		string $class,
 		ReflectionParameter $parameter,
-		$arguments
+		array $arguments
 	) {
 		if ( PHP_VERSION_ID >= 70000 ) {
 			if ( ! $parameter->hasType() ) {
@@ -421,9 +421,9 @@ final class SimpleInjector implements Injector {
 	 * @throws FailedToMakeInstance If the argument could not be resolved.
 	 */
 	private function resolve_argument_by_name(
-		$class,
+		string $class,
 		ReflectionParameter $parameter,
-		$arguments
+		array $arguments
 	) {
 		$name = $parameter->getName();
 
@@ -471,7 +471,7 @@ final class SimpleInjector implements Injector {
 	 * @param string $class Class to check for a shared instance.
 	 * @return bool Whether a shared instance exists.
 	 */
-	private function has_shared_instance( $class ) {
+	private function has_shared_instance( string $class ) {
 		return \array_key_exists( $class, $this->shared_instances )
 			&& null !== $this->shared_instances[ $class ];
 	}
@@ -486,7 +486,7 @@ final class SimpleInjector implements Injector {
 	 * @throws FailedToMakeInstance If an uninstantiated shared instance is
 	 *                              requested.
 	 */
-	private function get_shared_instance( $class ) {
+	private function get_shared_instance( string $class ) {
 		if ( ! $this->has_shared_instance( $class ) ) {
 			throw FailedToMakeInstance::for_uninstantiated_shared_instance( $class );
 		}
@@ -502,7 +502,7 @@ final class SimpleInjector implements Injector {
 	 * @param string $class Class to check for a delegate.
 	 * @return bool Whether a delegate exists.
 	 */
-	private function has_delegate( $class ) {
+	private function has_delegate( string $class ) {
 		return \array_key_exists( $class, $this->delegates );
 	}
 
@@ -515,7 +515,7 @@ final class SimpleInjector implements Injector {
 	 * @return callable Delegate.
 	 * @throws FailedToMakeInstance If an invalid delegate is requested.
 	 */
-	private function get_delegate( $class ) {
+	private function get_delegate( string $class ) {
 		if ( ! $this->has_delegate( $class ) ) {
 			throw FailedToMakeInstance::for_invalid_delegate( $class );
 		}

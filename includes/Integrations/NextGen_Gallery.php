@@ -67,7 +67,7 @@ class NextGen_Gallery extends Service_Base {
 	 *
 	 * @return bool Whether the output buffer should run.
 	 */
-	public function filter_run_ngg_resource_manager( $valid_request ) {
+	public function filter_run_ngg_resource_manager( bool $valid_request ) {
 		if (
 			// Plain permalinks.
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended

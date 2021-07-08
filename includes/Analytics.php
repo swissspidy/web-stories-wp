@@ -64,7 +64,7 @@ class Analytics extends Service_Base {
 	 * @param string $tracking_id Tracking ID.
 	 * @return array <amp-analytics> configuration.
 	 */
-	public function get_default_configuration( $tracking_id ) {
+	public function get_default_configuration( string $tracking_id ) {
 		$config = [
 			'vars'     => [
 				'gtag_id' => $tracking_id,
