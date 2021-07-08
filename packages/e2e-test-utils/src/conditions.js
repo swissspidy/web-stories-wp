@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,8 @@
  * limitations under the License.
  */
 
-/**
- * Internal dependencies
- */
-import activateRTL from './activateRTL';
-import deactivateRTL from './deactivateRTL';
-
-/**
- * Establishes test lifecycle to enable RTL mode
- * for the duration of the test.
- */
-export default function withRTL() {
-  beforeAll(async () => {
-    await activateRTL();
-  });
-
-  afterAll(async () => {
-    await deactivateRTL();
-  });
+export function skipSuiteOnFirefox() {
+  if (process.env.PUPPETEER_PRODUCT === 'firefox') {
+    test.only('does not work on Firefox', () => {});
+  }
 }

@@ -41,7 +41,7 @@ jobs:
   e2e:
     name: '${{ matrix.browser }} - WP ${{ matrix.wp }}'
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 30
     continue-on-error: ${{ matrix.experimental == true }}
     strategy:
       matrix:
@@ -50,12 +50,19 @@ jobs:
           - browser: 'chrome'
             wp: 'latest'
             snapshots: true
+
           - browser: 'chrome'
             wp: '5.8-RC2'
             experimental: true
             snapshots: false
+
           - browser: 'chrome'
             wp: '5.5'
+            snapshots: false
+
+          - browser: 'firefox'
+            wp: 'latest'
+            experimental: true
             snapshots: false
 
     steps:
@@ -123,10 +130,13 @@ jobs:
         run: npm run test:e2e:percy
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN_E2E }}
+          PUPPETEER_PRODUCT: ${{ matrix.browser }}
         if: ( matrix.snapshots ) && ( github.event.pull_request.draft == false )
 
       - name: Run E2E tests
         run: npm run test:e2e
+        env:
+          PUPPETEER_PRODUCT: ${{ matrix.browser }}
         if: ( ! matrix.snapshots ) || ( github.event.pull_request.draft == true )
 
       - name: Stop Docker environment

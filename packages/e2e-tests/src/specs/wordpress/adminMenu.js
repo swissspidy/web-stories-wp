@@ -17,9 +17,15 @@
 /**
  * External dependencies
  */
-import { visitAdminPage } from '@web-stories-wp/e2e-test-utils';
+import {
+  skipSuiteOnFirefox,
+  visitAdminPage,
+} from '@web-stories-wp/e2e-test-utils';
 
 describe('Admin Menu', () => {
+  // Firefox has troubles triggering the sub-menu on hover.
+  skipSuiteOnFirefox();
+
   it('should contain links to Dashboard sub-pages', async () => {
     await visitAdminPage('index.php');
 

@@ -33,9 +33,7 @@ async function visitSettings() {
     text: 'Settings',
   });
 
-  await page.waitForResponse((response) =>
-    response.url().includes('web-stories/v1/media')
-  );
+  await expect(page).toMatch('Data Sharing Opt-in');
 }
 
 export default visitSettings;

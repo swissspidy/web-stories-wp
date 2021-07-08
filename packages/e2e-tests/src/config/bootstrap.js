@@ -23,6 +23,7 @@ import {
   enablePageDialogAccept,
   setBrowserViewport,
   setCurrentUser,
+  toggleVideoOptimization,
   trashAllPosts,
 } from '@web-stories-wp/e2e-test-utils';
 
@@ -89,6 +90,52 @@ const ALLOWED_ERROR_MESSAGES = [
 
   // Another Firefox warning.
   'Layout was forced before the page was fully loaded',
+
+  // Firefox cookie warning.
+  'will be soon rejected because it has the “SameSite” attribute set to “None”',
+
+  // Firefox cookie warning.
+  'has been rejected because it is already expired',
+
+  // Firefox warns about this usage in TinyMCE.
+  'MouseEvent.mozPressure is deprecated',
+
+  // Firefox + Feature Policy for embeds.
+  'Skipping unsupported feature name',
+
+  // Firefox + CSP for embeds.
+  'Ignoring duplicate source',
+
+  // Another CSP warning in Firefox for embeds.
+  'Content Security Policy: Couldn’t parse invalid host',
+
+  // Another CSP warning in Firefox for embeds.
+  'An iframe which has both allow-top-navigation and allow-top-navigation-by-user-activation',
+
+  // Firefox warns about this in WP admin.
+  'For more information see “The Principal Writing Mode”',
+
+  // Firefox warns about this, caused by react-modal.
+  'unreachable code after return statement',
+
+  // Some bug in Firefox?
+  '0xc1f30001 (NS_ERROR_NOT_INITIALIZED)',
+
+  // Firefox Nightly does not appear to support MP4.
+  // The "Web Stories Block" test embeds a story containing an MP4,
+  // and the Tenor test loads MP4s as well.
+  'Your system may not have the required video codecs for: video/mp4',
+  'Specified “type” attribute of “video/mp4” is not supported',
+
+  // Firefox warning for AMP scripts that can be neglected in tests.
+  'Loading failed for the module with source “https://cdn.ampproject.org',
+  'Loading failed for the <script> with source “https://cdn.ampproject.org',
+
+  // Flaky image loading in Firefox.
+  'Image corrupt or truncated.',
+
+  // Some bug in Firefox?
+  'TypeError: can\'t access property "docShell", target.defaultView is undefined',
 ];
 
 export function addAllowedErrorMessage(message) {
@@ -241,6 +288,9 @@ beforeAll(async () => {
   await setCurrentUser('admin', 'password');
   await trashAllPosts();
   await trashAllPosts('web-story');
+
+  // Disable cross-origin isolation by default as it causes issues in Firefox.
+  await toggleVideoOptimization(false);
 });
 
 // eslint-disable-next-line jest/require-top-level-describe

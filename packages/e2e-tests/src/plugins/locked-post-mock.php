@@ -12,7 +12,7 @@
  * @link      https://sitekit.withgoogle.com
  */
 
-namespace Google\Web_Stories\E2E\PostLock;
+namespace Google\Web_Stories\E2E_Tests\PostLock;
 
 const USERNAME = 'test_locker';
 

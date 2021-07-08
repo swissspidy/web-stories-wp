@@ -18,6 +18,7 @@
  * Internal dependencies
  */
 import { getCurrentUser, setCurrentUser } from './user';
+import toggleVideoOptimization from './toggleVideoOptimization';
 
 /**
  * Establishes test lifecycle to enforce a specific user to be logged in.
@@ -28,9 +29,12 @@ import { getCurrentUser, setCurrentUser } from './user';
 export default function withUser(username, password) {
   const currentUser = getCurrentUser();
 
-  /* eslint-disable jest/require-top-level-describe */
-  beforeAll(() => setCurrentUser(username, password));
+  beforeAll(async () => {
+    await setCurrentUser(username, password);
+
+    // Disable cross-origin isolation by default as it causes issues in Firefox.
+    await toggleVideoOptimization(false);
+  });
 
   afterAll(() => setCurrentUser(currentUser.username, currentUser.password));
-  /* eslint-enable jest/require-top-level-describe */
 }

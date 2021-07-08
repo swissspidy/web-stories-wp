@@ -18,15 +18,16 @@
  * External dependencies
  */
 import {
-  addRequestInterception,
   publishPost,
   withDisabledToolbarOnFrontend,
   insertBlock,
   withPlugin,
   createNewPost,
   setPostContent,
+  skipSuiteOnFirefox,
 } from '@web-stories-wp/e2e-test-utils';
 import percySnapshot from '@percy/puppeteer';
+
 /**
  * Internal dependencies
  */
@@ -39,46 +40,25 @@ const EMBED_BLOCK_CONTENT = `
 `;
 
 describe('Web Stories Block', () => {
-  let stopRequestInterception;
+  // Firefox has issues playing media (MP4 videos) in the story being embedded here.
+  // Consider using a different story for testing.
+  skipSuiteOnFirefox();
+
   let removeErrorMessage;
   let removeError404Message;
 
-  beforeAll(async () => {
+  beforeAll(() => {
     // Disable reason: Investigation is required why this error is happening.
     // See https://github.com/google/web-stories-wp/issues/8096
     removeErrorMessage = addAllowedErrorMessage(
-      'A component is changing an uncontrolled input of type %s to be controlled'
+      'A component is changing an uncontrolled input'
     );
     removeError404Message = addAllowedErrorMessage(
       'Failed to load resource: the server responded with a status of 404'
     );
-    await page.setRequestInterception(true);
-    stopRequestInterception = addRequestInterception((request) => {
-      // amp-story-player scripts
-      if (request.url().startsWith('https://cdn.ampproject.org/')) {
-        request.respond({
-          status: 200,
-          body: '',
-        });
-        return;
-      }
-
-      // Fetching metadata for the story.
-      if (request.url().includes('web-stories/v1/embed')) {
-        request.respond({
-          status: 200,
-          body: '{"title":"Stories in AMP - Hello World","poster":"https:\\/\\/amp.dev\\/static\\/samples\\/img\\/story_dog2_portrait.jpg"}',
-        });
-        return;
-      }
-
-      request.continue();
-    });
   });
 
-  afterAll(async () => {
-    await page.setRequestInterception(false);
-    stopRequestInterception();
+  afterAll(() => {
     removeErrorMessage();
     removeError404Message();
   });
@@ -104,7 +84,10 @@ describe('Web Stories Block', () => {
       'Sorry, this content could not be embedded.'
     );
 
-    // Wait a little longer for embed REST API request to come back.
+    await page.waitForResponse((response) =>
+      response.url().includes('web-stories/v1/embed')
+    );
+
     await page.waitForSelector('amp-story-player');
     await expect(page).toMatchElement('amp-story-player');
     await expect(page).toMatch('Embed Settings');
@@ -128,6 +111,7 @@ describe('Web Stories Block', () => {
     await expect(page).toMatchElement('.components-modal__screen-overlay');
     await percySnapshot(page, 'Story select modal');
   });
+
   // Disable for https://github.com/google/web-stories-wp/issues/6237
   // eslint-disable-next-line jest/no-disabled-tests
   describe.skip('AMP validation', () => {

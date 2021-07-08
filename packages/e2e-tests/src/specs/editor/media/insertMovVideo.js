@@ -23,11 +23,15 @@ import {
   uploadFile,
   deleteMedia,
   toggleVideoOptimization,
+  skipSuiteOnFirefox,
 } from '@web-stories-wp/e2e-test-utils';
 
 const MODAL = '.media-modal';
 
 describe('Handling .mov files', () => {
+  // Firefox does not yet support file uploads with Puppeteer. See https://bugzilla.mozilla.org/show_bug.cgi?id=1553847.
+  skipSuiteOnFirefox();
+
   let uploadedFiles = [];
 
   beforeEach(() => (uploadedFiles = []));
@@ -39,41 +43,43 @@ describe('Handling .mov files', () => {
     }
   });
 
-  // Flakey test, see https://github.com/google/web-stories-wp/issues/8232.
-  // eslint-disable-next-line jest/no-disabled-tests
-  it.skip('should insert .mov', async () => {
-    await createNewStory();
-    await expect(page).not.toMatchElement('[data-testid="FrameElement"]');
-
-    await expect(page).toClick('button', { text: 'Upload' });
-
-    await page.waitForSelector(MODAL, {
-      visible: true,
-    });
-    const fileName = await uploadFile('small-video.mov', false);
-    const fileNameNoExt = fileName.replace(/\.[^/.]+$/, '');
-    uploadedFiles.push(fileNameNoExt);
-
-    await expect(page).toClick('button', { text: 'Insert into page' });
-
-    await page.waitForSelector('[data-testid="videoElement"]', {
-      visible: false,
-    });
-    await expect(page).toMatchElement('[data-testid="videoElement"]', {
-      visible: false,
-    });
-  });
-
-  describe('Inserting .mov from dialog', () => {
+  describe('Enabled', () => {
     beforeEach(async () => {
-      await toggleVideoOptimization();
+      await toggleVideoOptimization(true);
     });
 
     afterEach(async () => {
-      await toggleVideoOptimization();
+      await toggleVideoOptimization(false);
     });
-    // Uses the existence of the element's frame element as an indicator for successful insertion.
-    it('should not list the .mov', async () => {
+
+    // Flakey test, see https://github.com/google/web-stories-wp/issues/8232.
+    // eslint-disable-next-line jest/no-disabled-tests
+    it.skip('should insert .mov video from media dialog', async () => {
+      await createNewStory();
+      await expect(page).not.toMatchElement('[data-testid="FrameElement"]');
+
+      await expect(page).toClick('button', { text: 'Upload' });
+
+      await page.waitForSelector(MODAL, {
+        visible: true,
+      });
+      const fileName = await uploadFile('small-video.mov', false);
+      const fileNameNoExt = fileName.replace(/\.[^/.]+$/, '');
+      uploadedFiles.push(fileNameNoExt);
+
+      await expect(page).toClick('button', { text: 'Insert into page' });
+
+      await page.waitForSelector('[data-testid="videoElement"]', {
+        visible: false,
+      });
+      await expect(page).toMatchElement('[data-testid="videoElement"]', {
+        visible: false,
+      });
+    });
+  });
+
+  describe('Disabled', () => {
+    it('should not list the .mov video in the media dialog', async () => {
       await createNewStory();
       await expect(page).not.toMatchElement('[data-testid="FrameElement"]');
 

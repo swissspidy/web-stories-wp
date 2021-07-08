@@ -19,12 +19,36 @@
  */
 import visitSettings from './visitSettings';
 
-async function toggleVideoOptimization() {
+/**
+ * Toggle video optimization user preference on the settings page.
+ *
+ * @param {boolean} enable Whether the setting should be enabled or not.
+ * @return {Promise<void>}
+ */
+async function toggleVideoOptimization(enable = true) {
   await visitSettings();
-  const selector = '[data-testid="media-optimization-settings-checkbox"]';
-  await page.waitForSelector(selector);
-  // Clicking will only act on the first element.
-  await expect(page).toClick(selector);
+
+  // Contributor users won't have this setting as they cannot upload media.
+  const settingExists = Boolean(
+    await page.$('[data-testid="media-optimization-settings-checkbox"]')
+  );
+
+  if (!settingExists) {
+    return;
+  }
+
+  const isChecked = Boolean(
+    await page.$('[data-testid="media-optimization-settings-checkbox"]:checked')
+  );
+
+  if ((isChecked && enable) || (!isChecked && !enable)) {
+    return;
+  }
+
+  await expect(page).toClick(
+    '[data-testid="media-optimization-settings-checkbox"]'
+  );
+
   // Await REST API request.
   await page.waitForResponse((response) =>
     response.url().includes('web-stories/v1/users/me')

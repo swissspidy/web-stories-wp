@@ -18,9 +18,16 @@
  * External dependencies
  */
 import percySnapshot from '@percy/puppeteer';
-import { createNewStory } from '@web-stories-wp/e2e-test-utils';
+import {
+  createNewStory,
+  skipSuiteOnFirefox,
+} from '@web-stories-wp/e2e-test-utils';
 
 describe('Story Editor with disabled JavaScript', () => {
+  // Disabling JS like this is not yet supported in Firefox.
+  // See https://bugzilla.mozilla.org/show_bug.cgi?id=1549437.
+  skipSuiteOnFirefox();
+
   it('should display error message', async () => {
     // Disable javascript for test.
     await page.setJavaScriptEnabled(false);

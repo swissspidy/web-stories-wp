@@ -36,7 +36,7 @@ async function toggleExperiments(features, enable) {
     features.map(async (feature) => {
       const selector = `#${feature}`;
       await page.waitForSelector(selector);
-      const checkedSelector = `${selector}[checked=checked]`;
+      const checkedSelector = `${selector}:checked`;
       const isChecked = Boolean(await page.$(checkedSelector));
       if ((!isChecked && enable) || (isChecked && !enable)) {
         await page.click(selector);
@@ -44,10 +44,8 @@ async function toggleExperiments(features, enable) {
     })
   );
 
-  await Promise.all([
-    page.waitForNavigation({ waitUntil: 'networkidle0' }),
-    page.click('#submit'),
-  ]);
+  await Promise.all([page.waitForNavigation(), page.click('#submit')]);
+  await expect(page).toMatch('Settings saved.');
 }
 
 /**
@@ -57,8 +55,6 @@ async function toggleExperiments(features, enable) {
  * @param {Array<string>} features Array of experiments to enable.
  */
 export default function withExperimentalFeatures(features) {
-  /* eslint-disable jest/require-top-level-describe */
   beforeAll(() => toggleExperiments(features, true));
   afterAll(() => toggleExperiments(features, false));
-  /* eslint-enable jest/require-top-level-describe */
 }
