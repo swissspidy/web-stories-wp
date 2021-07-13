@@ -159,21 +159,32 @@ function useUploadMedia({
       deleteMediaElement({ id });
       removeItem({ id });
 
-      showSnackbar({
+      const snackBarMessage = {
         message:
           error?.message ||
           __(
             'File could not be uploaded. Please try a different file.',
             'web-stories'
           ),
-        thumbnail: resource && {
-          src: ['video', 'gif'].includes(resource.type)
-            ? resource.poster
-            : resource.src,
-          alt: resource?.alt,
-        },
         dismissable: true,
-      });
+      };
+
+      if (resource) {
+        if (['video', 'gif'].includes(resource.type) && resource?.poster) {
+          snackBarMessage.thumbnail = {
+            src: resource.poster,
+            alt: resource?.alt,
+          };
+        }
+
+        if ('image' === resource.type && resource?.src) {
+          snackBarMessage.thumbnail = {
+            src: resource.src,
+            alt: resource?.alt,
+          };
+        }
+      }
+      showSnackbar(snackBarMessage);
     }
   }, [failures, deleteMediaElement, removeItem, showSnackbar]);
 
