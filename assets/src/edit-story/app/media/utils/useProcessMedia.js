@@ -27,6 +27,7 @@ import useStory from '../../story/useStory';
 function useProcessMedia({
   uploadMedia,
   uploadVideoPoster,
+  updateVideoIsMuted,
   updateMedia,
   deleteMediaElement,
 }) {
@@ -110,6 +111,9 @@ function useProcessMedia({
         ) {
           uploadVideoPoster(resource.id, resource.src);
         }
+        if ('video' === resource.type && !resource.local && !resource.isMuted) {
+          updateVideoIsMuted(resource.id, resource.src);
+        }
       };
 
       const onUploadProgress = ({ resource }) => {
@@ -141,10 +145,89 @@ function useProcessMedia({
       copyResourceData,
       uploadMedia,
       uploadVideoPoster,
+      updateVideoIsMuted,
       updateOldObject,
       deleteMediaElement,
       updateExistingElements,
     ]
+  );
+
+  const optimizeVideoMuted = useCallback(
+    ({ resource: oldResource }) => {
+      const { src: url, mimeType, poster } = oldResource;
+
+      const onUploadStart = () => {
+        updateExistingElements({
+          oldResource: {
+            ...oldResource,
+            isMuted: true,
+            isTranscoding: true,
+            isOptimized: true,
+          },
+        });
+      };
+
+      const onUploadError = () => {
+        updateExistingElements({
+          oldResource: { ...oldResource, isTranscoding: false },
+        });
+      };
+
+      const onUploadSuccess = ({ resource }) => {
+        copyResourceData({ oldResource, resource });
+        if (
+          ['video', 'gif'].includes(resource.type) &&
+          !resource.local &&
+          !resource.posterId
+        ) {
+          uploadVideoPoster(resource.id, resource.src, oldResource.id);
+        }
+      };
+
+      const onUploadProgress = ({ resource }) => {
+        const oldResourceWithId = { ...resource, id: oldResource.id };
+        updateExistingElements({
+          oldResource: oldResourceWithId,
+        });
+      };
+
+      const process = async () => {
+        let file = false;
+        let posterfile = false;
+        try {
+          file = await fetchRemoteFile(url, mimeType);
+        } catch (e) {
+          // Ignore for now.
+          return;
+        }
+        if (poster) {
+          try {
+            posterfile = await fetchRemoteFile(url, 'image/jpeg');
+          } catch (e) {
+            // Ignore for now.
+          }
+        }
+        await uploadMedia([file], {
+          onUploadSuccess,
+          onUploadStart,
+          onUploadError,
+          onUploadProgress,
+          additionalData: {
+            alt: oldResource.alt,
+            title: oldResource.title,
+            post: oldResource.id,
+          },
+          muteVideo: true,
+          resource: {
+            ...oldResource,
+            isMuted: true,
+          },
+          posterfile,
+        });
+      };
+      return process();
+    },
+    [copyResourceData, uploadMedia, uploadVideoPoster, updateExistingElements]
   );
 
   const optimizeGif = useCallback(
@@ -207,6 +290,7 @@ function useProcessMedia({
   return {
     optimizeVideo,
     optimizeGif,
+    optimizeVideoMuted,
   };
 }
 

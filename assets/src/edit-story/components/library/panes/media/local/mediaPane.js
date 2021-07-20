@@ -107,6 +107,7 @@ function MediaPane(props) {
     setMediaType,
     setSearchTerm,
     uploadVideoPoster,
+    updateVideoIsMuted,
     totalItems,
     optimizeVideo,
     optimizeGif,
@@ -127,6 +128,7 @@ function MediaPane(props) {
         setMediaType,
         setSearchTerm,
         uploadVideoPoster,
+        updateVideoIsMuted,
         optimizeVideo,
         optimizeGif,
       },
@@ -144,6 +146,7 @@ function MediaPane(props) {
         setMediaType,
         setSearchTerm,
         uploadVideoPoster,
+        updateVideoIsMuted,
         optimizeVideo,
         optimizeGif,
       };
@@ -221,14 +224,18 @@ function MediaPane(props) {
       );
 
       if (
-        !resource.posterId &&
         !resource.local &&
         (allowedVideoMimeTypes.includes(resource.mimeType) ||
           resource.type === 'gif')
       ) {
-        // Upload video poster and update media element afterwards, so that the
-        // poster will correctly show up in places like the Accessibility panel.
-        uploadVideoPoster(resource.id, mediaPickerEl.url);
+        if (!resource.posterId) {
+          // Upload video poster and update media element afterwards, so that the
+          // poster will correctly show up in places like the Accessibility panel.
+          uploadVideoPoster(resource.id, mediaPickerEl.url);
+        }
+        if (!resource.isMuted) {
+          updateVideoIsMuted(resource.id, resource.src);
+        }
       }
     } catch (e) {
       showSnackbar({

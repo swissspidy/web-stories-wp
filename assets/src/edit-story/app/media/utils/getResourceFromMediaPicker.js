@@ -50,6 +50,7 @@ const getResourceFromMediaPicker = (mediaPickerEl) => {
       sizes,
     },
     media_source: mediaSource,
+    meta: { web_story_is_muted: isMuted },
   } = mediaPickerEl;
 
   return createResource({
@@ -73,6 +74,7 @@ const getResourceFromMediaPicker = (mediaPickerEl) => {
     sizes,
     local: false,
     isOptimized: 'video-optimization' === mediaSource,
+    isMuted,
   });
 };
 

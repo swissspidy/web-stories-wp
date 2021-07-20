@@ -55,6 +55,7 @@ function useMediaUploadQueue() {
     isTranscodingEnabled,
     canTranscodeFile,
     transcodeVideo,
+    transcodeMuteVideo,
     getFirstFrameOfVideo,
     convertGifToVideo,
   } = useFFmpeg();
@@ -211,6 +212,7 @@ function useMediaUploadQueue() {
             resource,
             additionalData = {},
             posterFile,
+            muteVideo,
           } = item;
           if ('PENDING' !== itemState) {
             return;
@@ -235,6 +237,9 @@ function useMediaUploadQueue() {
               newFile = await convertGifToVideo(file);
               finishTranscoding({ id, file: newFile });
               additionalData.media_source = 'gif-conversion';
+              additionalData.meta = {
+                web_story_is_muted: true,
+              };
             } catch (error) {
               // Cancel uploading if there were any errors.
               cancelUploading({ id, error });
@@ -258,9 +263,17 @@ function useMediaUploadQueue() {
             startTranscoding({ id });
 
             try {
-              newFile = await transcodeVideo(file);
+              if (muteVideo) {
+                newFile = await transcodeMuteVideo(file);
+                additionalData.meta = {
+                  web_story_is_muted: true,
+                };
+              } else {
+                newFile = await transcodeVideo(file);
+                additionalData.media_source = 'video-optimization';
+              }
+
               finishTranscoding({ id, file: newFile });
-              additionalData.media_source = 'video-optimization';
             } catch (error) {
               // Cancel uploading if there were any errors.
               cancelUploading({ id, error });
@@ -323,6 +336,7 @@ function useMediaUploadQueue() {
     getFirstFrameOfVideo,
     canTranscodeFile,
     transcodeVideo,
+    transcodeMuteVideo,
     convertGifToVideo,
     isGifOptimizationEnabled,
   ]);
