@@ -128,7 +128,7 @@ function PageBackgroundPanel({ selectedElements, pushUpdate }) {
     <SimplePanel
       css={highlight?.showEffect && styles.FLASH}
       name="pageBackground"
-      title={__('Page background', 'web-stories')}
+      title={__('Page Background', 'web-stories')}
       isPersistable={!highlight}
     >
       {isDefaultBackground && (
