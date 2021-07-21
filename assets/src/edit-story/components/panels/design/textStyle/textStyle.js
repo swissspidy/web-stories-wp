@@ -18,7 +18,7 @@
  * External dependencies
  */
 import { __ } from '@web-stories-wp/i18n';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 /**
  * Internal dependencies
  */
@@ -31,15 +31,22 @@ import ColorControls from './color';
 import FontControls from './font';
 
 function StylePanel(props) {
-  const fontDropdownRef = useRef(null);
-  const textColorRef = useRef(null);
   // use highlights to update panel styles
   // but don't dynamically adjust the `isPersistable` prop on `SimplePanel`
   // the textStyle panel automatically opens already whenever a text element is selected
   // if we update this to only be when there's a highlight the functionality that is expected
   // will be wrong.
-  const dropdownHighlight = useFocusHighlight(states.FONT, fontDropdownRef);
-  const colorHighlight = useFocusHighlight(states.TEXT_COLOR, textColorRef);
+
+  // <FontControls> uses a forward ref, so we can't use a callback ref
+  // to pass an element to useFocusHighlight().
+  const fontDropdownRef = useRef(null);
+  const dropdownHighlight = useFocusHighlight(
+    states.FONT,
+    fontDropdownRef?.current
+  );
+
+  const [textColor, setTextColor] = useState(null);
+  const colorHighlight = useFocusHighlight(states.TEXT_COLOR, textColor);
 
   // Update size and position if relevant values have changed.
   usePresubmitHandler(getUpdatedSizeAndPosition, []);
@@ -62,7 +69,7 @@ function StylePanel(props) {
         }
       />
       <StyleControls {...props} />
-      <ColorControls {...props} textColorRef={textColorRef} />
+      <ColorControls {...props} textColorRef={setTextColor} />
     </SimplePanel>
   );
 }

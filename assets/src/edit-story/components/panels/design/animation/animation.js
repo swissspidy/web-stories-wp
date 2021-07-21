@@ -78,8 +78,11 @@ function AnimationPanel({
   updateAnimationState,
 }) {
   const playUpdatedAnimation = useRef(false);
+
+  // <EffectChooserDropdown> uses a forward ref, so we can't use a callback ref
+  // to pass an element to useFocusHighlight().
   const dropdownRef = useRef(null);
-  const highlight = useFocusHighlight(states.ANIMATION, dropdownRef);
+  const highlight = useFocusHighlight(states.ANIMATION, dropdownRef?.current);
 
   const isBackground =
     selectedElements.length === 1 && selectedElements[0].isBackground;

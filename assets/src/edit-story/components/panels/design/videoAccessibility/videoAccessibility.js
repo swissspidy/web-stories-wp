@@ -19,7 +19,7 @@
  */
 import PropTypes from 'prop-types';
 import { __, sprintf, translateToExclusiveList } from '@web-stories-wp/i18n';
-import { useCallback, useRef, useMemo } from 'react';
+import { useCallback, useRef, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 /**
@@ -94,12 +94,15 @@ function VideoAccessibilityPanel({ selectedElements, pushUpdate }) {
   }, [allowedImageFileTypes]);
 
   // Used for focusing and highlighting the panel from the pre-publish checkist.
-  const inputRef = useRef();
+  const [input, setInput] = useState(null);
+  const highlightInput = useFocusHighlight(states.ASSISTIVE_TEXT, input);
+
+  // <StyledMedia> uses a forward ref, so we can't use a callback ref
+  // to pass an element to useFocusHighlight().
   const mediaRef = useRef();
-  const highlightInput = useFocusHighlight(states.ASSISTIVE_TEXT, inputRef);
   const highlightMediaPicker = useFocusHighlight(
     states.VIDEO_A11Y_POSTER,
-    mediaRef
+    mediaRef?.current
   );
 
   let cropParams = null;
@@ -138,7 +141,7 @@ function VideoAccessibilityPanel({ selectedElements, pushUpdate }) {
         />
         <InputsWrapper>
           <TextArea
-            ref={inputRef}
+            ref={setInput}
             placeholder={
               alt === MULTIPLE_VALUE
                 ? MULTIPLE_DISPLAY_VALUE
